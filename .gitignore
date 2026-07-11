@@ -1,0 +1,6 @@
+/.direnv/
+/.cargo-home/
+/.tree-sitter/
+/node_modules/
+/result
+/target/

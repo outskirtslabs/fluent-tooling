@@ -1,0 +1,21 @@
+[package]
+name = "fluent-lint"
+description = "High-quality diagnostics for Fluent FTL"
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "fl-lint"
+path = "src/main.rs"
+
+[dependencies]
+codespan-reporting.workspace = true
+tree-sitter.workspace = true
+tree-sitter-fluent = { path = "../tree-sitter-fluent" }
+
+[dev-dependencies]
+serde_json = "1.0"

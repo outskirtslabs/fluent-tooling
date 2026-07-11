@@ -1,0 +1,31 @@
+{:tasks
+ {generate
+  {:doc "Regenerate the Tree-sitter parser"
+   :task (shell "tree-sitter generate")}
+
+  fmt
+  {:doc "Format Rust and grammar sources"
+   :task (do
+           (shell "cargo fmt --all")
+           (shell "prettier --write grammar.js package.json tree-sitter.json"))}
+
+  fmt:check
+  {:doc "Check source formatting"
+   :task (do
+           (shell "cargo fmt --all --check")
+           (shell "prettier --check grammar.js package.json tree-sitter.json"))}
+
+  test
+  {:doc "Run all Rust tests"
+   :task (shell "cargo test --workspace")}
+
+  lint
+  {:doc "Run Clippy with warnings denied"
+   :task (shell "cargo clippy --workspace --all-targets -- -D warnings")}
+
+  ci
+  {:doc "Run the complete quality gate"
+   :task (do
+           (run 'fmt:check)
+           (run 'lint)
+           (run 'test))}}}

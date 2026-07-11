@@ -1,0 +1,28 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "fluent",
+      "camelcase": "Fluent",
+      "title": "Fluent",
+      "scope": "source.fluent",
+      "file-types": ["ftl"],
+      "injection-regex": "^fluent$",
+      "class-name": "TreeSitterFluent"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Fluent grammar for linting and editor tooling",
+    "authors": [
+      {
+        "name": "Casey Link",
+        "email": "casey@outskirtslabs.com"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/outskirtslabs/fluent-tooling"
+    }
+  }
+}

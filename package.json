@@ -1,0 +1,20 @@
+{
+  "name": "@outskirtslabs/tree-sitter-fluent",
+  "version": "0.1.0",
+  "description": "Fluent grammar for linting and editor tooling",
+  "repository": "https://github.com/outskirtslabs/fluent-tooling",
+  "license": "MIT",
+  "author": "Casey Link <casey@outskirtslabs.com>",
+  "keywords": [
+    "incremental",
+    "parsing",
+    "tree-sitter",
+    "fluent"
+  ],
+  "files": [
+    "grammar.js",
+    "tree-sitter.json",
+    "queries/*",
+    "src/**"
+  ]
+}

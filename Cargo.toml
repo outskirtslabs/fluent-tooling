@@ -1,0 +1,19 @@
+[workspace]
+members = [
+  "crates/fluent-lint",
+  "crates/tree-sitter-fluent",
+]
+resolver = "2"
+
+[workspace.package]
+authors = ["Casey Link <casey@outskirtslabs.com>"]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/outskirtslabs/fluent-tooling"
+rust-version = "1.85"
+version = "0.1.0"
+
+[workspace.dependencies]
+codespan-reporting = "0.12"
+tree-sitter = "0.25.10"
+tree-sitter-language = "0.1"

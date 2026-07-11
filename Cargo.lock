@@ -49,6 +49,7 @@ name = "fluent-lint"
 version = "0.1.0"
 dependencies = [
  "codespan-reporting",
+ "serde",
  "serde_json",
  "tree-sitter",
  "tree-sitter-fluent",

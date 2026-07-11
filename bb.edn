@@ -19,6 +19,13 @@
   {:doc "Run all Rust tests"
    :task (shell "cargo test --workspace")}
 
+  test:emacs
+  {:doc "Run all Emacs ERT tests"
+   :task (do
+           (shell "mkdir -p target/emacs-tree-sitter")
+           (shell "cc -fPIC -shared -Isrc src/parser.c src/scanner.c -o target/emacs-tree-sitter/libtree-sitter-fluent.so")
+           (shell "emacs --batch -Q -L editors/emacs --load editors/emacs/test/fluent-ts-mode-test.el --load editors/emacs/test/fluent-ts-flymake-test.el --load editors/emacs/test/flycheck-fluent-test.el --funcall ert-run-tests-batch-and-exit"))}
+
   lint
   {:doc "Run Clippy with warnings denied"
    :task (shell "cargo clippy --workspace --all-targets -- -D warnings")}
@@ -28,4 +35,5 @@
    :task (do
            (run 'fmt:check)
            (run 'lint)
-           (run 'test))}}}
+           (run 'test)
+           (run 'test:emacs))}}}

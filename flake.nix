@@ -58,6 +58,9 @@
           ];
           packages = [
             pkgs.clang
+            ((pkgs.emacsPackagesFor pkgs.emacs).emacsWithPackages (epkgs: [
+              epkgs.flycheck
+            ]))
             pkgs.pkg-config
             pkgs.rustc
           ];

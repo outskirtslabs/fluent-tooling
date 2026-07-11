@@ -3,7 +3,8 @@ use std::fs;
 use std::io::{self, IsTerminal, Read};
 use std::process::ExitCode;
 
-use fluent_lint::{lint, render_ansi, render_plain};
+use fluent_lint::{Diagnostic, Severity, lint, render_ansi, render_plain};
+use serde::Serialize;
 
 const USAGE: &str = "Usage: fl-lint [OPTIONS] <FILE>...
 
@@ -15,6 +16,7 @@ Arguments:
 Options:
       --color <WHEN>    Color output: auto, always, or never [default: auto]
       --no-color        Alias for `--color never`
+      --format <FORMAT> Output format: human or json [default: human]
   -h, --help            Print help
   -V, --version         Print version";
 
@@ -25,9 +27,53 @@ enum ColorChoice {
     Never,
 }
 
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum OutputFormat {
+    Human,
+    Json,
+}
+
 struct Options {
     color: ColorChoice,
+    format: OutputFormat,
     paths: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct JsonDocument {
+    schema_version: u32,
+    diagnostics: Vec<JsonDiagnostic>,
+}
+
+#[derive(Serialize)]
+struct JsonDiagnostic {
+    path: String,
+    severity: &'static str,
+    code: String,
+    message: String,
+    labels: Vec<JsonLabel>,
+    notes: Vec<String>,
+    help: Vec<String>,
+}
+
+#[derive(Serialize)]
+struct JsonLabel {
+    primary: bool,
+    message: String,
+    span: JsonSpan,
+}
+
+#[derive(Serialize)]
+struct JsonSpan {
+    start: JsonPosition,
+    end: JsonPosition,
+}
+
+#[derive(Serialize)]
+struct JsonPosition {
+    byte: usize,
+    line: usize,
+    column: usize,
 }
 
 enum Command {
@@ -62,6 +108,7 @@ fn parse_args(arguments: impl Iterator<Item = String>) -> Result<Command, String
     let mut arguments = arguments.peekable();
     let mut options = Options {
         color: ColorChoice::Auto,
+        format: OutputFormat::Human,
         paths: Vec::new(),
     };
     let mut positional_only = false;
@@ -76,6 +123,12 @@ fn parse_args(arguments: impl Iterator<Item = String>) -> Result<Command, String
             "-h" | "--help" => return Ok(Command::Help),
             "-V" | "--version" => return Ok(Command::Version),
             "--no-color" => options.color = ColorChoice::Never,
+            "--format" => {
+                let value = arguments
+                    .next()
+                    .ok_or_else(|| "`--format` requires human or json".to_owned())?;
+                options.format = parse_format(&value)?;
+            }
             "--color" => {
                 let value = arguments
                     .next()
@@ -85,6 +138,9 @@ fn parse_args(arguments: impl Iterator<Item = String>) -> Result<Command, String
             "-" => options.paths.push(argument),
             _ if argument.starts_with("--color=") => {
                 options.color = parse_color(&argument[8..])?;
+            }
+            _ if argument.starts_with("--format=") => {
+                options.format = parse_format(&argument[9..])?;
             }
             _ if argument.starts_with('-') => {
                 return Err(format!("unknown option `{argument}`"));
@@ -97,6 +153,16 @@ fn parse_args(arguments: impl Iterator<Item = String>) -> Result<Command, String
         return Err("at least one FTL file is required".into());
     }
     Ok(Command::Lint(options))
+}
+
+fn parse_format(value: &str) -> Result<OutputFormat, String> {
+    match value {
+        "human" => Ok(OutputFormat::Human),
+        "json" => Ok(OutputFormat::Json),
+        _ => Err(format!(
+            "invalid output format `{value}`; expected human or json"
+        )),
+    }
 }
 
 fn parse_color(value: &str) -> Result<ColorChoice, String> {
@@ -119,6 +185,7 @@ fn run(options: Options) -> ExitCode {
     let mut stdin_used = false;
     let mut found_diagnostics = false;
     let mut io_failed = false;
+    let mut json_diagnostics = Vec::new();
 
     for path in options.paths {
         let (filename, source) = if path == "-" {
@@ -151,12 +218,31 @@ fn run(options: Options) -> ExitCode {
             continue;
         }
         found_diagnostics = true;
-        let rendered = if ansi {
-            render_ansi(&filename, &source, &diagnostics)
-        } else {
-            render_plain(&filename, &source, &diagnostics)
+        match options.format {
+            OutputFormat::Human => {
+                let rendered = if ansi {
+                    render_ansi(&filename, &source, &diagnostics)
+                } else {
+                    render_plain(&filename, &source, &diagnostics)
+                };
+                eprint!("{rendered}");
+            }
+            OutputFormat::Json => {
+                json_diagnostics.extend(json_diagnostics_for(&filename, &source, &diagnostics));
+            }
+        }
+    }
+
+    if options.format == OutputFormat::Json {
+        let document = JsonDocument {
+            schema_version: 1,
+            diagnostics: json_diagnostics,
         };
-        eprint!("{rendered}");
+        println!(
+            "{}",
+            serde_json::to_string(&document)
+                .expect("serializing lint diagnostics to JSON cannot fail")
+        );
     }
 
     if io_failed {
@@ -166,4 +252,62 @@ fn run(options: Options) -> ExitCode {
     } else {
         ExitCode::SUCCESS
     }
+}
+
+fn json_diagnostics_for(
+    path: &str,
+    source: &str,
+    diagnostics: &[Diagnostic],
+) -> Vec<JsonDiagnostic> {
+    diagnostics
+        .iter()
+        .map(|diagnostic| JsonDiagnostic {
+            path: path.to_owned(),
+            severity: match diagnostic.severity {
+                Severity::Error => "error",
+                Severity::Warning => "warning",
+            },
+            code: diagnostic.code.clone(),
+            message: diagnostic.message.clone(),
+            labels: diagnostic
+                .labels
+                .iter()
+                .map(|label| JsonLabel {
+                    primary: label.primary,
+                    message: label.message.clone(),
+                    span: JsonSpan {
+                        start: source_position(source, label.span.start),
+                        end: source_position(source, label.span.end),
+                    },
+                })
+                .collect(),
+            notes: diagnostic.notes.clone(),
+            help: diagnostic.help.clone(),
+        })
+        .collect()
+}
+
+fn source_position(source: &str, byte: usize) -> JsonPosition {
+    let mut line = 0;
+    let mut column = 0;
+    let mut characters = source[..byte].chars().peekable();
+
+    while let Some(character) = characters.next() {
+        match character {
+            '\r' => {
+                if characters.peek() == Some(&'\n') {
+                    characters.next();
+                }
+                line += 1;
+                column = 0;
+            }
+            '\n' => {
+                line += 1;
+                column = 0;
+            }
+            _ => column += 1,
+        }
+    }
+
+    JsonPosition { byte, line, column }
 }

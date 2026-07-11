@@ -1,9 +1,14 @@
 # fluent-tooling
 
-This repository contains [`ftl-lint`](docs/ftl-lint.md), a command-line linter
-with compiler-style diagnostics; [`tree-sitter-fluent`](docs/tree-sitter.md),
-an error-tolerant Tree-sitter grammar with Rust bindings; and
-[`fluent-ts-mode`](docs/emacs.md), a native Tree-sitter major mode for Emacs.
+> Tree-sitter grammar, linter, and editor tooling for the [Fluent localization system][upstream] from Mozilla.
+
+This repository contains:
+
+- [`ftl-lint`](docs/ftl-lint.md), a command-line linter with compiler-style
+  diagnostics;
+- [`tree-sitter-fluent`](docs/tree-sitter.md), an error-tolerant Tree-sitter
+  grammar with Rust bindings; and
+- [`fluent-ts-mode`](docs/emacs.md), a native Tree-sitter major mode for Emacs.
 
 ## Quick start
 
@@ -51,3 +56,5 @@ Distributed under the [MIT](https://spdx.org/licenses/MIT.html) license.
 Copied grammar provenance and third-party fixture licenses are documented in
 [`NOTICE.md`](NOTICE.md) and
 [`test/fixtures/UPSTREAM.md`](test/fixtures/UPSTREAM.md).
+
+[upstream]: https://projectfluent.org/

@@ -74,10 +74,10 @@
                  '(fluent-ts-mode)))
   (should (flycheck-checker-get 'fluent 'standard-input))
   (should (equal (flycheck-checker-get 'fluent 'command)
-                 '("fl-lint" "--format" "json" "-")))
-  (let ((fluent-ts-mode-linter-executable "/tmp/custom-fl-lint"))
+                 '("ftl-lint" "--format" "json" "-")))
+  (let ((fluent-ts-mode-linter-executable "/tmp/custom-ftl-lint"))
     (should (equal flycheck-fluent-executable
-                   "/tmp/custom-fl-lint"))))
+                   "/tmp/custom-ftl-lint"))))
 
 (ert-deftest fluent-ts-mode-auto-prefers-loaded-flycheck ()
   (flycheck-fluent-test--ensure-loaded)

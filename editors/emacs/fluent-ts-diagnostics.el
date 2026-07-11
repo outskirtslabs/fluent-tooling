@@ -13,7 +13,7 @@
 ;;; Commentary:
 
 ;; Internal helpers shared by the Flymake and Flycheck adapters.  The parser
-;; accepts version 1 of fl-lint's stable JSON editor protocol.
+;; accepts version 1 of ftl-lint's stable JSON editor protocol.
 
 ;;; Code:
 
@@ -21,10 +21,10 @@
 (require 'seq)
 
 (define-error 'fluent-ts-diagnostics-error
-              "Invalid fl-lint JSON diagnostics")
+              "Invalid ftl-lint JSON diagnostics")
 
 (defun fluent-ts-diagnostics-parse (output)
-  "Parse version 1 fl-lint JSON OUTPUT and return its diagnostics."
+  "Parse version 1 ftl-lint JSON OUTPUT and return its diagnostics."
   (let ((document
          (condition-case error-data
              (json-parse-string output
@@ -38,7 +38,7 @@
                                   (error-message-string error-data))))))))
     (unless (eql (alist-get 'schema_version document) 1)
       (signal 'fluent-ts-diagnostics-error
-              '("unsupported fl-lint JSON schema version")))
+              '("unsupported ftl-lint JSON schema version")))
     (let ((diagnostics (alist-get 'diagnostics document 'missing)))
       (unless (listp diagnostics)
         (signal 'fluent-ts-diagnostics-error

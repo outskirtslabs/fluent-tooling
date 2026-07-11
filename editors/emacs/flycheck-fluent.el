@@ -13,7 +13,7 @@
 ;;; Commentary:
 
 ;; Optional Flycheck support for `fluent-ts-mode'.  The checker sends unsaved
-;; buffer contents to `fl-lint --format json -' and converts the stable JSON
+;; buffer contents to `ftl-lint --format json -' and converts the stable JSON
 ;; protocol into Flycheck errors.
 
 ;;; Code:
@@ -47,7 +47,7 @@
      :filename (buffer-file-name buffer))))
 
 (defun flycheck-fluent-parse (output checker buffer)
-  "Parse fl-lint JSON OUTPUT from CHECKER for BUFFER."
+  "Parse ftl-lint JSON OUTPUT from CHECKER for BUFFER."
   (condition-case nil
       (mapcar (lambda (diagnostic)
                 (flycheck-fluent--error diagnostic checker buffer))
@@ -58,8 +58,8 @@
   'fluent-ts-mode-linter-executable)
 
 (flycheck-define-checker fluent
-  "Check Fluent FTL syntax and structure with fl-lint."
-  :command ("fl-lint" "--format" "json" "-")
+  "Check Fluent FTL syntax and structure with ftl-lint."
+  :command ("ftl-lint" "--format" "json" "-")
   :standard-input t
   :error-parser flycheck-fluent-parse
   :modes fluent-ts-mode)

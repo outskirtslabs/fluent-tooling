@@ -4,7 +4,7 @@ use std::process::{Command, Output, Stdio};
 use serde_json::Value;
 
 fn command() -> Command {
-    Command::new(env!("CARGO_BIN_EXE_fl-lint"))
+    Command::new(env!("CARGO_BIN_EXE_ftl-lint"))
 }
 
 fn fixture(path: &str) -> String {
@@ -18,14 +18,14 @@ fn run_with_stdin(arguments: &[&str], source: &str) -> Output {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .expect("fl-lint must start");
+        .expect("ftl-lint must start");
     child
         .stdin
         .take()
         .expect("stdin pipe")
         .write_all(source.as_bytes())
         .expect("write stdin");
-    child.wait_with_output().expect("fl-lint must finish")
+    child.wait_with_output().expect("ftl-lint must finish")
 }
 
 fn json_output(output: &Output) -> Value {
@@ -50,7 +50,7 @@ fn valid_file_exits_zero_without_output() {
         .arg("--no-color")
         .arg(fixture("projectfluent-reference/eof_empty.ftl"))
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
 
     assert!(output.status.success());
     assert!(output.stdout.is_empty());
@@ -63,7 +63,7 @@ fn broken_file_exits_one_with_rich_diagnostics() {
         .arg("--no-color")
         .arg(fixture("regressions/broken.ftl"))
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
     let stderr = String::from_utf8(output.stderr).expect("diagnostics must be UTF-8");
 
     assert_eq!(output.status.code(), Some(1));
@@ -88,7 +88,7 @@ fn invocation_errors_exit_two() {
     let output = command()
         .arg("--unknown-option")
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
     let stderr = String::from_utf8(output.stderr).expect("usage must be UTF-8");
 
     assert_eq!(output.status.code(), Some(2));
@@ -105,7 +105,7 @@ fn explicit_human_format_preserves_stderr_output() {
             &fixture("regressions/broken.ftl"),
         ])
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
 
     assert_eq!(output.status.code(), Some(1));
     assert!(output.stdout.is_empty());
@@ -121,7 +121,7 @@ fn json_clean_file_exits_zero_with_an_empty_document() {
             &fixture("projectfluent-reference/eof_empty.ftl"),
         ])
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
     let document = json_output(&output);
 
     assert!(output.status.success());
@@ -136,7 +136,7 @@ fn json_diagnostics_use_stdout_and_include_the_stable_schema() {
     let output = command()
         .args(["--format=json", &path])
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
     let document = json_output(&output);
     let diagnostic = json_diagnostics(&document)
         .iter()
@@ -174,7 +174,7 @@ fn json_multiple_files_keep_each_diagnostic_path() {
     let output = command()
         .args(["--format", "json", &first, &second])
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
     let document = json_output(&output);
     let paths: Vec<_> = json_diagnostics(&document)
         .iter()
@@ -250,7 +250,7 @@ fn invalid_format_is_an_invocation_error_on_stderr() {
     let output = command()
         .args(["--format", "xml", "messages.ftl"])
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
 
     assert_eq!(output.status.code(), Some(2));
     assert!(output.stdout.is_empty());
@@ -263,7 +263,7 @@ fn json_io_failures_exit_two_and_keep_the_error_on_stderr() {
     let output = command()
         .args(["--format", "json", &missing])
         .output()
-        .expect("fl-lint must run");
+        .expect("ftl-lint must run");
     let document = json_output(&output);
 
     assert_eq!(output.status.code(), Some(2));

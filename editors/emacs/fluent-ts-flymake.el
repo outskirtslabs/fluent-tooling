@@ -13,7 +13,7 @@
 ;;; Commentary:
 
 ;; This asynchronous Flymake backend sends the current buffer to
-;; `fl-lint --format json -'.  It checks unsaved contents and cancels obsolete
+;; `ftl-lint --format json -'.  It checks unsaved contents and cancels obsolete
 ;; processes when Flymake requests a newer check.
 
 ;;; Code:
@@ -24,10 +24,10 @@
 (require 'subr-x)
 
 (defvar-local fluent-ts-flymake--process nil
-  "The active fl-lint process for the current buffer.")
+  "The active ftl-lint process for the current buffer.")
 
 (defun fluent-ts-flymake--cancel-process ()
-  "Cancel the current buffer's obsolete fl-lint process."
+  "Cancel the current buffer's obsolete ftl-lint process."
   (when (processp fluent-ts-flymake--process)
     (process-put fluent-ts-flymake--process 'fluent-ts-obsolete t)
     (when (process-live-p fluent-ts-flymake--process)
@@ -47,7 +47,7 @@
         (point)))))
 
 (defun fluent-ts-flymake--diagnostic (diagnostic)
-  "Convert a fl-lint DIAGNOSTIC into a Flymake diagnostic."
+  "Convert a ftl-lint DIAGNOSTIC into a Flymake diagnostic."
   (let* ((label (fluent-ts-diagnostics-primary-label diagnostic))
          (span (alist-get 'span label))
          (start (and span (alist-get 'start span)))
@@ -123,7 +123,7 @@
 
 ;;;###autoload
 (defun fluent-ts-flymake-backend (report-fn &rest _arguments)
-  "Run fl-lint for Flymake and call REPORT-FN with its diagnostics."
+  "Run ftl-lint for Flymake and call REPORT-FN with its diagnostics."
   (fluent-ts-flymake--cancel-process)
   (let ((source (current-buffer))
         (stdout (generate-new-buffer " *fluent-ts-flymake stdout*"))

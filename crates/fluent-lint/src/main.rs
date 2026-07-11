@@ -6,7 +6,7 @@ use std::process::ExitCode;
 use fluent_lint::{Diagnostic, Severity, lint, render_ansi, render_plain};
 use serde::Serialize;
 
-const USAGE: &str = "Usage: fl-lint [OPTIONS] <FILE>...
+const USAGE: &str = "Usage: ftl-lint [OPTIONS] <FILE>...
 
 Lint Fluent FTL resources and print compiler-style diagnostics.
 
@@ -97,7 +97,7 @@ fn main() -> ExitCode {
             ExitCode::SUCCESS
         }
         Command::Version => {
-            println!("fl-lint {}", env!("CARGO_PKG_VERSION"));
+            println!("ftl-lint {}", env!("CARGO_PKG_VERSION"));
             ExitCode::SUCCESS
         }
         Command::Lint(options) => run(options),

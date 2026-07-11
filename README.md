@@ -1,18 +1,21 @@
 # Fluent Tooling
 
-Fluent Tooling provides an error-tolerant Tree-sitter grammar for Fluent FTL and the `fl-lint` command-line linter.
+This repo provides an error-tolerant Tree-sitter grammar for Fluent FTL and the
+`ftl-lint` command-line linter.
 
-The parser is designed for editors, linting, incremental parsing, and source-preserving tooling.
+The parser is designed for editors, linting, incremental parsing, and
+source-preserving tooling.
 
-The linter reports syntax and structural problems with source labels, Fluent error codes, notes, and actionable help.
+The linter reports syntax and structural problems with source labels, Fluent
+error codes, notes, and actionable help.
 
-## Use `fl-lint`
+## Use `ftl-lint`
 
 Build the release executable with Nix:
 
 ```bash
 nix build
-./result/bin/fl-lint path/to/messages.ftl
+./result/bin/ftl-lint path/to/messages.ftl
 ```
 
 Run it without creating a result link:
@@ -65,7 +68,7 @@ Every label contains a message, a primary-label flag, and a half-open source spa
 
 ## Emacs
 
-The repository includes `fluent-ts-mode`, a native Tree-sitter major mode for Emacs 29.1 and newer. It registers `.ftl` files, provides syntax highlighting and indentation, and supports Flymake and Flycheck through `fl-lint`.
+The repository includes `fluent-ts-mode`, a native Tree-sitter major mode for Emacs 29.1 and newer. It registers `.ftl` files, provides syntax highlighting and indentation, and supports Flymake and Flycheck through `ftl-lint`.
 
 The package does not bundle the compiled grammar. Install the package first, then install the grammar explicitly as described below.
 
@@ -119,7 +122,9 @@ Run `doom sync`, then restart Emacs. Require the package and configure it in `co
 
 ### Install the grammar
 
-Run `M-x fluent-ts-mode-install-grammar` once after installing the package. The command uses the public recipe for this repository. Opening an `.ftl` file never downloads or installs the grammar.
+Run `M-x fluent-ts-mode-install-grammar` once after installing the package. The
+command uses the public recipe for this repository. Opening an `.ftl` file
+never downloads or installs the grammar.
 
 To build from an existing checkout instead, set the recipe before running the command:
 
@@ -130,10 +135,12 @@ To build from an existing checkout instead, set the recipe before running the co
 
 ### Configure diagnostics
 
-The default `auto` setting uses Flycheck when it is already loaded; otherwise it uses built-in Flymake. Install `fl-lint` on Emacs's `exec-path`, or set its absolute path:
+The default `auto` setting uses Flycheck when it is already loaded; otherwise
+it uses built-in Flymake. Install `ftl-lint` on Emacs's `exec-path`, or set its
+absolute path:
 
 ```elisp
-(setq fluent-ts-mode-linter-executable "/absolute/path/to/fl-lint")
+(setq fluent-ts-mode-linter-executable "/absolute/path/to/ftl-lint")
 ```
 
 Select Flymake explicitly without installing another Emacs package:
@@ -179,10 +186,6 @@ The CST exposes default variants as `default_variant` nodes, retains malformed r
 
 The grammar accepts LF, CRLF, and lone CR line endings, negative numeric literals, EOF comments, unindented block placeables, and deeply nested selectors.
 
-The parser and scanner in `src/` are C because that is Tree-sitter's generated parser ABI and the inherited grammar's external scanner.
-
-All new linting and command-line code is Rust.
-
 ## Development
 
 Enter the Nix development shell:
@@ -206,7 +209,7 @@ bb generate
 Run the linter:
 
 ```bash
-cargo run -p fluent-lint --bin fl-lint -- test/fixtures/regressions/broken.ftl
+cargo run -p fluent-lint --bin ftl-lint -- test/fixtures/regressions/broken.ftl
 ```
 
 The test suite adopts Project Fluent, Fluent.js, and fluent-rs fixtures in addition to project regressions.

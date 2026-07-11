@@ -31,14 +31,14 @@
             "-p"
             "fluent-lint"
             "--bin"
-            "fl-lint"
+            "ftl-lint"
           ];
           cargoTestFlags = [ "--workspace" ];
           meta = {
             description = "Tree-sitter grammar and linter for Fluent FTL";
             homepage = "https://github.com/outskirtslabs/fluent-tooling";
             license = pkgs.lib.licenses.mit;
-            mainProgram = "fl-lint";
+            mainProgram = "ftl-lint";
           };
         };
       devShell =

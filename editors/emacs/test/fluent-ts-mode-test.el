@@ -61,7 +61,8 @@
     (should (equal comment-start "# "))
     (should (equal comment-end ""))
     (should-not indent-tabs-mode)
-    (should (= fluent-ts-mode-indent-offset 4))))
+    (should (= fluent-ts-mode-indent-offset 4))
+    (should (equal fluent-ts-mode-linter-executable "ftl-lint"))))
 
 (ert-deftest fluent-ts-mode-reports-a-clear-missing-grammar-error ()
   (fluent-ts-mode-test--ensure-loaded)

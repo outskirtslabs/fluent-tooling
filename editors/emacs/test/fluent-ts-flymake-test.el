@@ -15,8 +15,8 @@
              (expand-file-name "editors/emacs" fluent-ts-flymake-test--root))
 
 (defconst fluent-ts-flymake-test--linter
-  (or (getenv "FL_LINT")
-      (expand-file-name "target/debug/fl-lint" fluent-ts-flymake-test--root)))
+  (or (getenv "FTL_LINT")
+      (expand-file-name "target/debug/ftl-lint" fluent-ts-flymake-test--root)))
 
 (defun fluent-ts-flymake-test--ensure-loaded ()
   "Require the Fluent Flymake adapter."
@@ -150,7 +150,7 @@ Use EXECUTABLE as the linter and FILE-NAME as the optional visited file."
   (pcase-let ((`(,action ,properties)
                (fluent-ts-flymake-test--run
                 "message = Value\n"
-                :executable "/no/such/fl-lint")))
+                :executable "/no/such/ftl-lint")))
     (should (eq action :panic))
     (should (string-match-p
              "Cannot start Fluent linter"

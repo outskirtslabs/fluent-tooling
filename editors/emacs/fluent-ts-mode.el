@@ -48,7 +48,7 @@
   :safe #'natnump
   :group 'fluent-ts)
 
-(defcustom fluent-ts-mode-linter-executable "fl-lint"
+(defcustom fluent-ts-mode-linter-executable "ftl-lint"
   "Executable used to lint Fluent buffers."
   :type 'string
   :safe #'stringp

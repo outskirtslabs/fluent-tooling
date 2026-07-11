@@ -14,16 +14,11 @@
       devshell,
       ...
     }:
-    devenv.lib.mkFlake ./. {
-      inherit inputs;
-      withOverlays = [
-        devshell.overlays.default
-        devenv.overlays.default
-      ];
-      packages.default =
+    let
+      ftlLintPackage =
         pkgs:
         pkgs.rustPlatform.buildRustPackage {
-          pname = "fluent-tooling";
+          pname = "ftl-lint";
           version = "0.1.0";
           src = ./.;
           cargoLock.lockFile = ./Cargo.lock;
@@ -35,12 +30,42 @@
           ];
           cargoTestFlags = [ "--workspace" ];
           meta = {
-            description = "Tree-sitter grammar and linter for Fluent FTL";
+            description = "Linter for Fluent FTL";
             homepage = "https://github.com/outskirtslabs/fluent-tooling";
             license = pkgs.lib.licenses.mit;
             mainProgram = "ftl-lint";
           };
         };
+
+      fluentGrammarPackage =
+        pkgs:
+        pkgs.tree-sitter.buildGrammar {
+          language = "fluent";
+          version = "0.1.0";
+          src = ./.;
+          postInstall = ''
+            mkdir -p "$out/lib"
+            ln -s ../parser \
+              "$out/lib/libtree-sitter-fluent${pkgs.stdenv.hostPlatform.extensions.sharedLibrary}"
+          '';
+          meta = {
+            description = "Tree-sitter grammar for Fluent FTL";
+            homepage = "https://github.com/outskirtslabs/fluent-tooling";
+            license = pkgs.lib.licenses.mit;
+          };
+        };
+    in
+    devenv.lib.mkFlake ./. {
+      inherit inputs;
+      withOverlays = [
+        devshell.overlays.default
+        devenv.overlays.default
+      ];
+      packages = {
+        default = ftlLintPackage;
+        ftl-lint = ftlLintPackage;
+        tree-sitter-fluent = fluentGrammarPackage;
+      };
       devShell =
         pkgs:
         pkgs.devshell.mkShell {

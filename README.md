@@ -18,6 +18,16 @@ nix build
 ./result/bin/ftl-lint path/to/messages.ftl
 ```
 
+The flake also exports named linter and grammar packages:
+
+```bash
+nix build .#ftl-lint
+nix build .#tree-sitter-fluent
+```
+
+The grammar package installs the compiled parser at `parser` and provides an
+Emacs-compatible `lib/libtree-sitter-fluent.so` link.
+
 Run it without creating a result link:
 
 ```bash

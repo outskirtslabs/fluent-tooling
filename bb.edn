@@ -1,5 +1,10 @@
-{:tasks
- {generate
+{:deps {outskirtslabs/bb-tasks
+        {:git/url "https://github.com/outskirtslabs/bb-tasks"
+         :git/sha "9dbc6d77384b51ffde69007e98a0420b3cf6a0a7"}}
+ :tasks
+ {:requires ([ol.bb-tasks.sync-readme :as sync-readme])
+
+  generate
   {:doc "Regenerate the Tree-sitter parser"
    :task (shell "tree-sitter generate")}
 
@@ -29,6 +34,10 @@
   lint
   {:doc "Run Clippy with warnings denied"
    :task (shell "cargo clippy --workspace --all-targets -- -D warnings")}
+
+  gen-docs
+  {:doc "Generate Antora documentation"
+   :task (sync-readme/sync-top-level-docs! {:antora-start-path "doc"})}
 
   ci
   {:doc "Run the complete quality gate"

@@ -11,7 +11,7 @@ edition = "2024"
 license = "MIT"
 repository = "https://github.com/outskirtslabs/fluent-tooling"
 rust-version = "1.85"
-version = "0.1.0"
+version = "0.0.1"
 
 [workspace.dependencies]
 codespan-reporting = "0.12"

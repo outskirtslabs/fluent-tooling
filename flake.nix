@@ -19,7 +19,7 @@
         pkgs:
         pkgs.rustPlatform.buildRustPackage {
           pname = "ftl-lint";
-          version = "0.1.0";
+          version = "0.0.1";
           src = ./.;
           cargoLock.lockFile = ./Cargo.lock;
           cargoBuildFlags = [
@@ -41,7 +41,7 @@
         pkgs:
         pkgs.tree-sitter.buildGrammar {
           language = "fluent";
-          version = "0.1.0";
+          version = "0.0.1";
           src = ./.;
           postInstall = ''
             mkdir -p "$out/lib"

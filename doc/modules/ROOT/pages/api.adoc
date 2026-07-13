@@ -1,0 +1,8 @@
+= API reference
+
+Fluent Tooling exposes several integration surfaces:
+
+* xref:ftl-lint.adoc[`ftl-lint` CLI] documents command-line inputs, options, diagnostics, and exit statuses.
+* xref:json-diagnostics.adoc[JSON diagnostics protocol] specifies the stable machine-readable linter interface.
+* xref:tree-sitter.adoc[`tree-sitter-fluent`] documents the Rust binding, generated metadata, grammar behavior, and package layout.
+* xref:emacs.adoc[Emacs integration] documents `fluent-ts-mode`, Flymake, and Flycheck configuration.

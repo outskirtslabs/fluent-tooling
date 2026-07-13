@@ -1,0 +1,7 @@
+---
+name: fluent-tooling
+title: fluent-tooling
+version: next
+prerelease: true
+nav:
+  - modules/ROOT/nav.adoc

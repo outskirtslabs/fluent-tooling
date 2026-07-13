@@ -4,7 +4,7 @@
 
 ;; Author: Casey Link <casey@outskirtslabs.com>
 ;; Maintainer: Casey Link <casey@outskirtslabs.com>
-;; Version: 0.1.0
+;; Version: 0.0.1
 ;; Package-Requires: ((emacs "29.1") (flycheck "35"))
 ;; Keywords: languages, i18n, fluent, flycheck
 ;; URL: https://github.com/outskirtslabs/fluent-tooling

@@ -1,0 +1,17 @@
+{:manifest/version 1,
+ :project
+ {:id "fluent-tooling",
+  :coord "outskirtslabs/fluent-tooling",
+  :description "Tree-sitter grammar, linter, and editor tooling for the Fluent localization system",
+  :license "MIT",
+  :platforms [:rust :nix :emacs],
+  :status :experimental,
+  :created "2026-07-11",
+  :version "0.0.1"},
+ :docs
+ {:component "fluent-tooling",
+  :title "fluent-tooling",
+  :version "next",
+  :prerelease true,
+  :start-path "doc"},
+ :repo {:url "https://github.com/outskirtslabs/fluent-tooling"}}

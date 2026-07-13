@@ -1,0 +1,8 @@
+* xref:index.adoc[Home]
+* xref:ftl-lint.adoc[ftl-lint]
+* xref:json-diagnostics.adoc[JSON Diagnostics]
+* xref:tree-sitter.adoc[Tree-sitter Grammar]
+* xref:emacs.adoc[Emacs Integration]
+* xref:api.adoc[API Reference]
+* xref:development.adoc[Development]
+* xref:changelog.adoc[Changelog]

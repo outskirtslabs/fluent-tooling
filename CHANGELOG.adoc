@@ -1,0 +1,7 @@
+= Changelog
+
+All notable changes to fluent-tooling are documented here.
+
+== 0.0.1 - 2026-07-13
+
+Initial release of the Fluent grammar, linter, and Emacs tooling.

@@ -1,0 +1,100 @@
+= `tree-sitter-fluent`
+
+`tree-sitter-fluent` is an error-tolerant Tree-sitter grammar for Project Fluent FTL. It supports editors, linting, incremental parsing, and source-preserving tools.
+
+== Build the grammar with Nix
+
+[source,bash]
+----
+nix build .#tree-sitter-fluent
+----
+
+The package contains:
+
+[source,text]
+----
+result/
+├── parser
+├── lib/
+│   └── libtree-sitter-fluent.so -> ../parser
+├── queries/
+│   └── highlights.scm
+└── tree-sitter.json
+----
+
+`parser` is the compiled shared library in the layout used by Nixpkgs Tree-sitter grammar packages. The `lib` link uses the platform's shared-library extension—`.so` on Linux—and lets Emacs find the same library directly.
+
+== Use the Rust bindings
+
+The workspace crate exports a `tree-sitter-language` function and the generated node and highlight metadata:
+
+[source,rust]
+----
+use tree_sitter::Parser;
+
+let mut parser = Parser::new();
+let language = tree_sitter_fluent::LANGUAGE.into();
+parser.set_language(&language)?;
+----
+
+The public constants are:
+
+[cols="2,3",options="header"]
+|===
+|Constant |Contents
+
+|`LANGUAGE`
+|Language function for `Parser::set_language`
+
+|`NODE_TYPES`
+|Generated `src/node-types.json`
+
+|`HIGHLIGHTS_QUERY`
+|`queries/highlights.scm`
+|===
+
+An external Cargo project can depend on the repository directly:
+
+[source,toml]
+----
+[dependencies]
+tree-sitter = "0.25"
+tree-sitter-fluent = { git = "https://github.com/outskirtslabs/fluent-tooling" }
+----
+
+== Grammar behavior
+
+The CST exposes default variants as `default_variant` nodes, retains malformed regions as Tree-sitter errors, and recovers later valid entries. The grammar accepts LF, CRLF, and lone CR line endings, negative numeric literals, EOF comments, unindented block placeables, and deeply nested selectors.
+
+The highlight query covers the syntax used by `fluent-ts-mode` and other Tree-sitter consumers. Tests compile the query against the generated grammar to keep captures synchronized with node types.
+
+== Grammar sources
+
+The repository keeps generated C sources under `src/` so consumers can compile the grammar without running the Tree-sitter generator:
+
+[cols="2,3",options="header"]
+|===
+|Path |Purpose
+
+|`grammar.js`
+|Authoritative grammar definition
+
+|`tree-sitter.json`
+|Grammar name, version, file types, and repository metadata
+
+|`src/parser.c`
+|Parser generated from `grammar.js`
+
+|`src/scanner.c`
+|Handwritten external scanner
+
+|`src/node-types.json`
+|Generated named-node metadata
+
+|`queries/highlights.scm`
+|Syntax-highlight captures
+|===
+
+Tree-sitter build tools conventionally look for `src/parser.c` and optionally `src/scanner.c` or `src/scanner.cc`. Emacs's built-in installer follows that layout when it builds this repository's public grammar recipe.
+
+After editing `grammar.js`, regenerate the checked-in parser as described in the xref:development.adoc[development guide].

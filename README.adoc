@@ -4,15 +4,15 @@ ____
 Tree-sitter grammar, linter, and editor tooling for the https://projectfluent.org/[Fluent localization system] from Mozilla.
 ____
 
-image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/fluent-tooling/next/]
+image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/fluent-tooling/0.0.1/]
 image:https://img.shields.io/badge/status-experimental-red.svg[status: experimental,link=https://docs.outskirtslabs.com/open-source-vital-signs#experimental]
 image:https://ci.outskirtslabs.com/repos/github/outskirtslabs/fluent-tooling/badge.svg[alt=nixbot,link=https://ci.outskirtslabs.com/repos/github/outskirtslabs/fluent-tooling]
 
 This repository contains:
 
-* https://docs.outskirtslabs.com/fluent-tooling/next/ftl-lint[`ftl-lint`], a command-line linter with compiler-style diagnostics;
-* https://docs.outskirtslabs.com/fluent-tooling/next/tree-sitter[`tree-sitter-fluent`], an error-tolerant Tree-sitter grammar with Rust bindings; and
-* https://docs.outskirtslabs.com/fluent-tooling/next/emacs[`fluent-ts-mode`], a native Tree-sitter major mode for Emacs.
+* https://docs.outskirtslabs.com/fluent-tooling/0.0.1/ftl-lint[`ftl-lint`], a command-line linter with compiler-style diagnostics;
+* https://docs.outskirtslabs.com/fluent-tooling/0.0.1/tree-sitter[`tree-sitter-fluent`], an error-tolerant Tree-sitter grammar with Rust bindings; and
+* https://docs.outskirtslabs.com/fluent-tooling/0.0.1/emacs[`fluent-ts-mode`], a native Tree-sitter major mode for Emacs.
 
 Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#experimental[Experimental]*.
 
@@ -25,12 +25,12 @@ Run the linter from this checkout:
 nix run . -- path/to/messages.ftl
 ----
 
-See the https://docs.outskirtslabs.com/fluent-tooling/next/ftl-lint[`ftl-lint` guide] for installation, command-line options, diagnostic codes, and editor integration.
+See the https://docs.outskirtslabs.com/fluent-tooling/0.0.1/ftl-lint[`ftl-lint` guide] for installation, command-line options, diagnostic codes, and editor integration.
 
 == Documentation
 
-* https://docs.outskirtslabs.com/fluent-tooling/next/[Docs]
-* https://docs.outskirtslabs.com/fluent-tooling/next/api[API Reference]
+* https://docs.outskirtslabs.com/fluent-tooling/0.0.1/[Docs]
+* https://docs.outskirtslabs.com/fluent-tooling/0.0.1/api[API Reference]
 * https://github.com/outskirtslabs/fluent-tooling/issues[Support via GitHub Issues]
 
 == Nix packages
@@ -48,7 +48,7 @@ The flake exports two named packages and selects `ftl-lint` by default:
 |The compiled Tree-sitter grammar
 |===
 
-See the https://docs.outskirtslabs.com/fluent-tooling/next/tree-sitter[`tree-sitter-fluent` guide] for the grammar package's layout and integration options.
+See the https://docs.outskirtslabs.com/fluent-tooling/0.0.1/tree-sitter[`tree-sitter-fluent` guide] for the grammar package's layout and integration options.
 
 == Development
 
@@ -60,7 +60,7 @@ nix develop
 bb ci
 ----
 
-The https://docs.outskirtslabs.com/fluent-tooling/next/development[development guide] covers repository structure, parser generation, individual checks, and fixture provenance.
+The https://docs.outskirtslabs.com/fluent-tooling/0.0.1/development[development guide] covers repository structure, parser generation, individual checks, and fixture provenance.
 
 == Licensing
 
